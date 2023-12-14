@@ -6,7 +6,7 @@ publish_to: "none"
 version: 1.0.0+1
 
 environment:
-  sdk: ">=3.1.2 <4.0.0"
+  sdk: ">=3.2.3 <=4.0.0"
 
 #--------------- PACKAGES ------------------#
 dependencies:
@@ -48,13 +48,11 @@ flutter:
   #--------------- LOCAL ASSETS ------------------#
   assets:
     - assets/logos/
-    - assets/icons/brands/
     - assets/images/content/
     - assets/images/banners/
     - assets/images/reviews/
     - assets/images/products/
     - assets/icons/categories/
-    - assets/images/animations/
     - assets/icons/payment_methods/
     - assets/images/on_boarding_images/
     - assets/json/local_restaurant.json
