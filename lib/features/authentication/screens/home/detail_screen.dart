@@ -14,9 +14,15 @@ class DetailScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Detail Restaurant'),
+        backgroundColor: DColors.primary,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24.0),
+        padding: const EdgeInsets.only(
+          left: 24,
+          top: 15,
+          right: 24,
+          bottom: 24,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -39,12 +45,26 @@ class DetailScreen extends StatelessWidget {
                 Row(
                   children: [
                     const Icon(
+                      Icons.star,
+                      size: 20,
+                      color: DColors.yellow,
+                    ),
+                    const SizedBox(
+                      width: DSizes.xs,
+                    ),
+                    Text(
+                      restaurant.rating.toString(),
+                    ),
+                    const SizedBox(
+                      width: DSizes.lg,
+                    ),
+                    const Icon(
                       Icons.location_on,
                       size: 20,
                       color: DColors.primary,
                     ),
                     const SizedBox(
-                      width: DSizes.sm,
+                      width: DSizes.xs,
                     ),
                     SizedBox(
                       width: 210,
@@ -83,6 +103,113 @@ class DetailScreen extends StatelessWidget {
                   height: DSizes.sm,
                 ),
                 Text(restaurant.description)
+              ],
+            ),
+            const SizedBox(
+              height: DSizes.spaceBtwItems,
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Recommendation Food & Drinks',
+                  style: TextStyle(
+                    color: Color(0xFF1F2937),
+                    fontSize: 20,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w600,
+                    height: 0,
+                  ),
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                SizedBox(
+                  height: 125,
+                  child: ListView.separated(
+                    itemCount: restaurant.foods.length,
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.only(
+                      right: 20,
+                    ),
+                    separatorBuilder: (context, index) => const SizedBox(
+                      width: 25,
+                    ),
+                    itemBuilder: (context, index) {
+                      final foods = restaurant.foods[index];
+                      return Container(
+                        width: 110,
+                        decoration: BoxDecoration(
+                          color: DColors.secondary,
+                          borderRadius: BorderRadius.circular(
+                            16,
+                          ),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text(
+                              foods.name,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black,
+                                fontSize: 14,
+                              ),
+                              textAlign: TextAlign.center,
+                            )
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: DSizes.spaceBtwItems,
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 125,
+                  child: ListView.separated(
+                    itemCount: restaurant.drinks.length,
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.only(
+                      right: 20,
+                    ),
+                    separatorBuilder: (context, index) => const SizedBox(
+                      width: 25,
+                    ),
+                    itemBuilder: (context, index) {
+                      final drinks = restaurant.drinks[index];
+                      return Container(
+                        width: 110,
+                        decoration: BoxDecoration(
+                          color: DColors.primary,
+                          borderRadius: BorderRadius.circular(
+                            16,
+                          ),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text(
+                              drinks.name,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black,
+                                fontSize: 14,
+                              ),
+                              textAlign: TextAlign.center,
+                            )
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
               ],
             ),
           ],
