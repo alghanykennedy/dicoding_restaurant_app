@@ -70,7 +70,7 @@ class NavigatorController extends GetxController {
   final Rx<int> selectedIndex = 0.obs;
 
   final screen = [
-    HomeScreen(),
+    const HomeScreen(),
     const UpcomingScreen(
       image: DImages.upComingImage,
       title: 'Upcoming..',

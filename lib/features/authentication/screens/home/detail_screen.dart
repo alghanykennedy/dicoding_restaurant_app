@@ -1,19 +1,35 @@
+import 'package:dicoding_restaurant_app/utils/constants/api_constants.dart';
 import 'package:dicoding_restaurant_app/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../../utils/constants/colors.dart';
-import '../../model/restaurant_model.dart';
+import '../../controllers/home/home_controller.dart';
 
 class DetailScreen extends StatelessWidget {
-  final RestaurantModel restaurant;
-
-  const DetailScreen({super.key, required this.restaurant});
+  const DetailScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final RestaurantController controller = Get.put(RestaurantController());
+    final data = controller.detailRestaurants.value;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Detail Restaurant'),
+        title: const Text(
+          'Detail Restaurant',
+          style: TextStyle(
+            color: DColors.textWhite,
+          ),
+        ),
+        leading: IconButton(
+          onPressed: () => Get.back(),
+          icon: const Icon(
+            Icons.arrow_back_ios,
+            color: DColors.white,
+          ),
+        ),
+        automaticallyImplyLeading: false,
         backgroundColor: DColors.primary,
       ),
       body: SingleChildScrollView(
@@ -30,7 +46,7 @@ class DetailScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  restaurant.name,
+                  data?.restaurant?.name ?? '',
                   style: const TextStyle(
                     color: Color(0xFF1F2937),
                     fontSize: 20,
@@ -53,7 +69,7 @@ class DetailScreen extends StatelessWidget {
                       width: DSizes.xs,
                     ),
                     Text(
-                      restaurant.rating.toString(),
+                      data?.restaurant?.rating.toString() ?? '0.0',
                     ),
                     const SizedBox(
                       width: DSizes.lg,
@@ -69,7 +85,7 @@ class DetailScreen extends StatelessWidget {
                     SizedBox(
                       width: 210,
                       child: Text(
-                        restaurant.city,
+                        data?.restaurant?.address ?? '',
                         style: const TextStyle(
                           color: Color(0xFF6B7280),
                           fontSize: 12,
@@ -84,7 +100,9 @@ class DetailScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 16.0),
-            Image.network(restaurant.pictureId),
+            Image.network(
+              Constants.imageUrl + (data?.restaurant?.pictureId ?? ''),
+            ),
             const SizedBox(height: 16.0),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,7 +120,7 @@ class DetailScreen extends StatelessWidget {
                 const SizedBox(
                   height: DSizes.sm,
                 ),
-                Text(restaurant.description)
+                Text(data?.restaurant?.description ?? '')
               ],
             ),
             const SizedBox(
@@ -127,7 +145,7 @@ class DetailScreen extends StatelessWidget {
                 SizedBox(
                   height: 125,
                   child: ListView.separated(
-                    itemCount: restaurant.foods.length,
+                    itemCount: data?.restaurant?.menus?.foods?.length ?? 4,
                     scrollDirection: Axis.horizontal,
                     padding: const EdgeInsets.only(
                       right: 20,
@@ -136,7 +154,7 @@ class DetailScreen extends StatelessWidget {
                       width: 25,
                     ),
                     itemBuilder: (context, index) {
-                      final foods = restaurant.foods[index];
+                      final foods = data?.restaurant?.menus?.foods?[index];
                       return Container(
                         width: 110,
                         decoration: BoxDecoration(
@@ -149,7 +167,7 @@ class DetailScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Text(
-                              foods.name,
+                              foods?.name ?? "",
                               style: const TextStyle(
                                 fontWeight: FontWeight.w400,
                                 color: Colors.black,
@@ -174,7 +192,7 @@ class DetailScreen extends StatelessWidget {
                 SizedBox(
                   height: 125,
                   child: ListView.separated(
-                    itemCount: restaurant.drinks.length,
+                    itemCount: data?.restaurant?.menus?.drinks?.length ?? 4,
                     scrollDirection: Axis.horizontal,
                     padding: const EdgeInsets.only(
                       right: 20,
@@ -183,7 +201,8 @@ class DetailScreen extends StatelessWidget {
                       width: 25,
                     ),
                     itemBuilder: (context, index) {
-                      final drinks = restaurant.drinks[index];
+                      final drinks = data?.restaurant?.menus?.drinks?[index];
+                      // final drinks = restaurant.drinks[index];
                       return Container(
                         width: 110,
                         decoration: BoxDecoration(
@@ -196,15 +215,91 @@ class DetailScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Text(
-                              drinks.name,
+                              drinks?.name ?? "",
                               style: const TextStyle(
                                 fontWeight: FontWeight.w400,
-                                color: Colors.black,
+                                color: DColors.textWhite,
                                 fontSize: 14,
                               ),
                               textAlign: TextAlign.center,
                             )
                           ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: DSizes.spaceBtwItems,
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Customer Reviews',
+                  style: TextStyle(
+                    color: Color(0xFF1F2937),
+                    fontSize: 20,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w600,
+                    height: 0,
+                  ),
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                SizedBox(
+                  height: 250,
+                  child: ListView.separated(
+                    itemCount: data?.restaurant?.customerReviews?.length ?? 4,
+                    scrollDirection: Axis.vertical,
+                    padding: const EdgeInsets.only(
+                      right: 20,
+                    ),
+                    separatorBuilder: (context, index) => const SizedBox(
+                      height: 10,
+                    ),
+                    itemBuilder: (context, index) {
+                      final reviews = data?.restaurant?.customerReviews?[index];
+                      return Card(
+                        child: ListTile(
+                          leading: Container(
+                            width: 55,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(35),
+                            ),
+                            child: Image.asset(
+                              'assets/images/content/user.png',
+                            ),
+                          ),
+                          title: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                reviews?.name ?? "",
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 16,
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              Text(
+                                reviews?.date ?? "",
+                                style: const TextStyle(
+                                  color: Color(0xFF6E6E6E),
+                                  fontSize: 14,
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              const SizedBox(height: DSizes.sm),
+                            ],
+                          ),
+                          subtitle: Text(reviews?.review ?? ""),
+                          // trailing: const Icon(Icons.more_vert),
                         ),
                       );
                     },
