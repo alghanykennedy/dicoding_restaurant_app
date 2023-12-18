@@ -129,7 +129,6 @@ class HomeScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-
                       controller.restaurants.isEmpty &&
                               controller.keyword.text.isNotEmpty
                           ? Center(
