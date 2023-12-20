@@ -15,7 +15,7 @@ dependencies:
 
   # Utility Packages
   http: ^1.1.0
-  intl: ^0.18.1
+  intl: ^0.19.0
   logger: ^2.0.1
   url_launcher: ^6.1.12
   flutter_native_splash: ^2.3.1
@@ -39,7 +39,7 @@ dependencies:
   #--------------- ./ PACKAGES END ------------------#
 
 dev_dependencies:
-  flutter_lints: ^2.0.0
+  flutter_lints: ^3.0.1
   flutter_test:
     sdk: flutter
 

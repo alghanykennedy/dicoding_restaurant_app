@@ -1,3 +1,4 @@
+import 'package:dicoding_restaurant_app/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
 
 class NoInternetConnection extends StatelessWidget {
@@ -28,6 +29,9 @@ class NoInternetConnection extends StatelessWidget {
               fontFamily: 'Inter',
               fontWeight: FontWeight.w400,
             ),
+          ),
+          const SizedBox(
+            height: DSizes.spaceBtwItems,
           ),
         ],
       ),

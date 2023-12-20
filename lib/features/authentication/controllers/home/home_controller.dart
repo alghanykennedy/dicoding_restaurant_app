@@ -26,18 +26,18 @@ class RestaurantController extends GetxController {
     super.onInit();
     // _fetchRestaurants();
     _fetchDataRestaurants();
-    _listener = InternetConnectionChecker()
-        .onStatusChange
-        .listen((InternetConnectionStatus status) {
-      switch (status) {
-        case InternetConnectionStatus.connected:
-          connectionStatus.value = 1;
-          break;
-        case InternetConnectionStatus.disconnected:
-          connectionStatus.value = 0;
-          break;
-      }
-    });
+    _listener = InternetConnectionChecker().onStatusChange.listen(
+      (InternetConnectionStatus status) {
+        switch (status) {
+          case InternetConnectionStatus.connected:
+            connectionStatus.value = 1;
+            break;
+          case InternetConnectionStatus.disconnected:
+            connectionStatus.value = 0;
+            break;
+        }
+      },
+    );
   }
 
   @override
@@ -55,28 +55,44 @@ class RestaurantController extends GetxController {
     isLoading(true);
 
     try {
-      isLoading(true);
-      final List<RestaurantsModel> result =
-          await _restaurantService.getRestaurantsService();
-      restaurants.value = result;
-
+      if (connectionStatus.value == 1) {
+        final List<RestaurantsModel> result =
+            await _restaurantService.getRestaurantsService();
+        restaurants.value = result;
+      } else {
+        _fetchDataRestaurants();
+      }
       isLoading(false);
     } catch (e) {
-      Get.snackbar("title", "$e");
-      isLoading(false);
+      if (connectionStatus.value == 0) {
+        Get.snackbar(
+            "title", "Internet not found please check your connection");
+      } else {
+        Get.snackbar("title", "$e");
+      }
     }
   }
 
   Future<void> fetchDataDetailRestaurants(String id) async {
     isLoading(true);
     try {
-      final RestaurantsDetailModel result =
-          await _restaurantService.getDetailRestaurantsService(id);
-      detailRestaurants.value = result;
+      if (connectionStatus.value == 1) {
+        final RestaurantsDetailModel result =
+            await _restaurantService.getDetailRestaurantsService(id);
+        detailRestaurants.value = result;
+      } else {
+        Get.snackbar(
+            "title", "Internet not found please check your connection");
+      }
 
       isLoading(false);
     } catch (e) {
-      Get.snackbar("title", "$e");
+      if (connectionStatus.value == 1) {
+        Get.snackbar(
+            "title", "Internet not found please check your connection");
+      } else {
+        Get.snackbar("title", "$e");
+      }
       isLoading(false);
     }
   }

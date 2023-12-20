@@ -2,6 +2,7 @@ import 'package:dicoding_restaurant_app/features/authentication/controllers/home
 import 'package:dicoding_restaurant_app/features/authentication/screens/home/detail_screen.dart';
 import 'package:dicoding_restaurant_app/utils/constants/colors.dart';
 import 'package:dicoding_restaurant_app/utils/constants/sizes.dart';
+import 'package:dicoding_restaurant_app/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -15,6 +16,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final RestaurantController controller = Get.put(RestaurantController());
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -131,47 +133,50 @@ class HomeScreen extends StatelessWidget {
                       ),
                       controller.restaurants.isEmpty &&
                               controller.keyword.text.isNotEmpty
-                          ? Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  const SizedBox(
-                                    height: 56,
-                                  ),
-                                  SizedBox(
-                                    height: 115,
-                                    child: Image.asset(DImages.upComingImage),
-                                  ),
-                                  const SizedBox(
-                                    height: 20,
-                                  ),
-                                  const Text(
-                                    'Restaurant tidak ditemukan',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 12,
-                                      fontFamily: 'Montserrat',
-                                      fontWeight: FontWeight.w600,
-                                      height: 0,
+                          ? Expanded(
+                              child: SizedBox(
+                                height: DHelperFunctions.screenHeight(),
+                                width: DHelperFunctions.screenWidth(),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const SizedBox(
+                                      height: 56,
                                     ),
-                                  ),
-                                  const SizedBox(
-                                    height: 7.0,
-                                  ),
-                                  const Text(
-                                    'Silakan masukkan nama fitur atau kata kunci lainnya',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 12,
-                                      fontFamily: 'Montserrat',
-                                      fontWeight: FontWeight.w400,
-                                      height: 0,
+                                    SizedBox(
+                                      height: 115,
+                                      child: Image.asset(DImages.upComingImage),
                                     ),
-                                  ),
-                                ],
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+                                    const Text(
+                                      'Restaurant not found',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 12,
+                                        fontFamily: 'Montserrat',
+                                        fontWeight: FontWeight.w600,
+                                        height: 0,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 7.0,
+                                    ),
+                                    const Text(
+                                      'Silakan masukkan nama fitur atau kata kunci lainnya',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 12,
+                                        fontFamily: 'Montserrat',
+                                        fontWeight: FontWeight.w400,
+                                        height: 0,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             )
                           : Expanded(
