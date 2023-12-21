@@ -165,7 +165,7 @@ class HomeScreen extends StatelessWidget {
                                       height: 7.0,
                                     ),
                                     const Text(
-                                      'Silakan masukkan nama fitur atau kata kunci lainnya',
+                                      'Please enter the Restaurant name or other keywords',
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         color: Colors.black,

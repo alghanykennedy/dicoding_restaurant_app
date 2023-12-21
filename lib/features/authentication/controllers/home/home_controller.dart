@@ -55,13 +55,9 @@ class RestaurantController extends GetxController {
     isLoading(true);
 
     try {
-      if (connectionStatus.value == 1) {
-        final List<RestaurantsModel> result =
-            await _restaurantService.getRestaurantsService();
-        restaurants.value = result;
-      } else {
-        _fetchDataRestaurants();
-      }
+      final List<RestaurantsModel> result =
+          await _restaurantService.getRestaurantsService();
+      restaurants.value = result;
       isLoading(false);
     } catch (e) {
       if (connectionStatus.value == 0) {
