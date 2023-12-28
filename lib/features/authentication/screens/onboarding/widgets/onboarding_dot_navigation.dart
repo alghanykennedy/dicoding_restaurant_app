@@ -1,4 +1,4 @@
-import 'package:dicoding_restaurant_app/features/authentication/controllers/onboarding/onboarding_controller.dart';
+import 'package:dicoding_restaurant_app/features/authentication/controller/onboarding/onboarding_controller.dart';
 import 'package:dicoding_restaurant_app/utils/constants/colors.dart';
 import 'package:dicoding_restaurant_app/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';

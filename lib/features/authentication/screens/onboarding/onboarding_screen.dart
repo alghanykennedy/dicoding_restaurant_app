@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 
 import '../../../../utils/constants/sizes.dart';
 import '../../../../utils/device/device_utility.dart';
-import '../../controllers/onboarding/onboarding_controller.dart';
+import '../../controller/onboarding/onboarding_controller.dart';
 import 'widgets/onboarding_dot_navigation.dart';
 import 'widgets/onboarding_next_button.dart';
 import 'widgets/onboarding_page.dart';

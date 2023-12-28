@@ -1,5 +1,6 @@
-import 'package:dicoding_restaurant_app/features/authentication/controllers/home/home_controller.dart';
+import 'package:dicoding_restaurant_app/features/authentication/controller/home/home_controller.dart';
 import 'package:dicoding_restaurant_app/features/authentication/screens/home/detail_screen.dart';
+import 'package:dicoding_restaurant_app/features/authentication/services/notification_services.dart';
 import 'package:dicoding_restaurant_app/utils/constants/colors.dart';
 import 'package:dicoding_restaurant_app/utils/constants/sizes.dart';
 import 'package:dicoding_restaurant_app/utils/helpers/helper_functions.dart';
@@ -9,6 +10,8 @@ import 'package:get/get.dart';
 import '../../../../utils/constants/api_constants.dart';
 import '../../../../utils/constants/image_strings.dart';
 import '../noInternet/no_internet_connection.dart';
+
+DateTime scheduleTime = DateTime.now();
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -25,6 +28,88 @@ class HomeScreen extends StatelessWidget {
             color: DColors.textWhite,
           ),
         ),
+        actions: [
+          IconButton(
+            onPressed: () async {
+              await showTimePicker(
+                context: context,
+                initialTime: TimeOfDay.now(),
+              ).then(
+                (pickedTime) {
+                  if (pickedTime != null) {
+                    // Handle the picked time, for example, assign it to a variable
+                    DateTime selectedDateTime = DateTime(
+                      DateTime.now().year,
+                      DateTime.now().month,
+                      DateTime.now().day,
+                      pickedTime.hour,
+                      pickedTime.minute,
+                    );
+
+                    // Check if the selected time is in the future, if not, add a day
+                    if (selectedDateTime.isBefore(DateTime.now())) {
+                      selectedDateTime =
+                          selectedDateTime.add(const Duration(days: 1));
+                    }
+
+                    scheduleTime = selectedDateTime;
+                  } else {
+                    Get.back();
+                    return;
+                  }
+                },
+              );
+              debugPrint('Notification Scheduled for $scheduleTime');
+              NotificationServices().scheduleNotification(
+                title: 'Scheduled Notification',
+                body: '$scheduleTime',
+                scheduledNotificationDateTime: scheduleTime,
+              );
+            },
+            icon: const Icon(
+              Icons.notifications,
+              size: 30,
+              color: DColors.white,
+            ),
+          ),
+          IconButton(
+            onPressed: () async {
+              // Set the reminder time to 11:00 PM
+              DateTime dailyReminderTime = DateTime(
+                DateTime.now().year,
+                DateTime.now().month,
+                DateTime.now().day,
+                11,
+                00,
+              );
+
+              // Check if the selected time is in the future, if not, add a day
+              if (dailyReminderTime.isBefore(DateTime.now())) {
+                dailyReminderTime =
+                    dailyReminderTime.add(const Duration(days: 1));
+              }
+
+              // Schedule daily reminder notification
+              NotificationServices().scheduleNotification(
+                title: 'Daily Reminder',
+                body: 'Check out the latest restaurants!',
+                scheduledNotificationDateTime: dailyReminderTime,
+              );
+
+              // Show confirmation
+              Get.snackbar(
+                'Daily Reminder Set',
+                'You will receive a daily reminder at 11:00 PM',
+                snackPosition: SnackPosition.BOTTOM,
+              );
+            },
+            icon: const Icon(
+              Icons.alarm,
+              size: 30,
+              color: DColors.white,
+            ),
+          ),
+        ],
         centerTitle: true,
         automaticallyImplyLeading: false,
         backgroundColor: DColors.primary,
@@ -196,7 +281,9 @@ class HomeScreen extends StatelessWidget {
                                       );
                                     },
                                     contentPadding: const EdgeInsets.symmetric(
-                                        horizontal: 16.0, vertical: 8.0),
+                                      horizontal: 16.0,
+                                      vertical: 8.0,
+                                    ),
                                     leading: Image.network(
                                       Constants.imageUrl +
                                           restaurants.pictureId,
@@ -250,6 +337,28 @@ class HomeScreen extends StatelessWidget {
                                           ],
                                         ),
                                       ],
+                                    ),
+                                    trailing: Obx(
+                                      () => IconButton(
+                                        onPressed: () {
+                                          controller
+                                              .toggleFavorite(restaurants);
+                                        },
+                                        icon: Icon(
+                                          controller.favoriteRestaurants.any(
+                                                  (favRestaurant) =>
+                                                      favRestaurant.id ==
+                                                      restaurants.id)
+                                              ? Icons.favorite
+                                              : Icons.favorite_border,
+                                          color: controller.favoriteRestaurants
+                                                  .any((favRestaurant) =>
+                                                      favRestaurant.id ==
+                                                      restaurants.id)
+                                              ? Colors.red
+                                              : null,
+                                        ),
+                                      ),
                                     ),
                                   );
                                 },

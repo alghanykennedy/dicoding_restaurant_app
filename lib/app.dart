@@ -14,6 +14,7 @@ class App extends StatelessWidget {
       theme: DAppTheme.lightTheme,
       darkTheme: DAppTheme.darkTheme,
       home: const OnBoardingScreen(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }

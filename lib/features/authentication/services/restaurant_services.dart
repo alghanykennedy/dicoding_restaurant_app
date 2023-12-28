@@ -6,14 +6,9 @@ import '../model/restaurants_detail_model.dart';
 import '../model/restaurants_model.dart';
 
 class RestaurantService {
-  static var client = http.Client();
+  final http.Client client;
 
-  // Future<List<RestaurantModel>> getRestaurants() async {
-  //   final String data =
-  //       await rootBundle.loadString('assets/json/local_restaurant.json');
-  //   final List<dynamic> jsonList = json.decode(data)['restaurants'];
-  //   return jsonList.map((json) => RestaurantModel.fromJson(json)).toList();
-  // }
+  RestaurantService(this.client);
 
   Future<List<RestaurantsModel>> getRestaurantsService() async {
     final response = await client.get(Uri.parse(Constants.listRestaurant));

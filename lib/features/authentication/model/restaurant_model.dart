@@ -22,18 +22,20 @@ class RestaurantModel {
 
   factory RestaurantModel.fromJson(Map<String, dynamic> json) {
     return RestaurantModel(
-      id: json['id'],
-      name: json['name'],
-      description: json['description'],
-      pictureId: json['pictureId'],
-      city: json['city'],
-      rating: json['rating'].toDouble(),
-      foods: (json['menus']['foods'] as List<dynamic>)
-          .map((food) => Menu.fromJson(food))
-          .toList(),
-      drinks: (json['menus']['drinks'] as List<dynamic>)
-          .map((drink) => Menu.fromJson(drink))
-          .toList(),
+      id: json['id'] ?? '',
+      name: json['name'] ?? '',
+      description: json['description'] ?? '',
+      pictureId: json['pictureId'] ?? '',
+      city: json['city'] ?? '',
+      rating: json['rating'] != null ? json['rating'].toDouble() : 0.0,
+      foods: (json['menus']?['foods'] as List<dynamic>?)
+              ?.map((food) => Menu.fromJson(food))
+              .toList() ??
+          [],
+      drinks: (json['menus']?['drinks'] as List<dynamic>?)
+              ?.map((drink) => Menu.fromJson(drink))
+              .toList() ??
+          [],
     );
   }
 }

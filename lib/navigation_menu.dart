@@ -5,6 +5,7 @@ import 'package:iconsax/iconsax.dart';
 
 import 'common/widgets/upcoming_screen/upcoming_screen.dart';
 import 'features/authentication/screens/home/home_screen.dart';
+import 'features/favorite/screens/favorite_screen.dart';
 import 'utils/constants/colors.dart';
 import 'utils/helpers/helper_functions.dart';
 
@@ -40,12 +41,12 @@ class NavigationMenu extends StatelessWidget {
             ),
             NavigationDestination(
               icon: Icon(
-                Iconsax.shop,
+                Icons.favorite_border,
                 color: controller.selectedIndex.value == 1
                     ? DColors.primary
-                    : DColors.black,
+                    : null,
               ),
-              label: 'Store',
+              label: 'Favorite',
             ),
             NavigationDestination(
               icon: Icon(
@@ -71,11 +72,7 @@ class NavigatorController extends GetxController {
 
   final screen = [
     const HomeScreen(),
-    const UpcomingScreen(
-      image: DImages.upComingImage,
-      title: 'Upcoming..',
-      subTitle: '',
-    ),
+    const FavoriteScreen(),
     const UpcomingScreen(
       image: DImages.upComingImage,
       title: 'Upcoming..',

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../utils/constants/colors.dart';
-import '../../controllers/home/home_controller.dart';
+import '../../controller/home/home_controller.dart';
 import '../noInternet/no_internet_connection.dart';
 
 class DetailScreen extends StatelessWidget {

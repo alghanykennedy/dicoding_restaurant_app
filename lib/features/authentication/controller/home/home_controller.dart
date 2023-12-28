@@ -1,31 +1,42 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:dicoding_restaurant_app/features/authentication/model/restaurants_model.dart';
 import 'package:dicoding_restaurant_app/features/authentication/services/restaurant_services.dart';
+import 'package:dicoding_restaurant_app/features/favorite/model/favorite_restaurant.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 import '../../model/restaurants_detail_model.dart';
 
 class RestaurantController extends GetxController {
-  final RestaurantService _restaurantService = RestaurantService();
-  // final restaurants = <RestaurantModel>[].obs;
+  RestaurantService _restaurantService = RestaurantService(http.Client());
   final RxList<RestaurantsModel> restaurants = <RestaurantsModel>[].obs;
   Rx<RestaurantsDetailModel?> detailRestaurants =
       Rx<RestaurantsDetailModel?>(null);
+  RxList<FavoriteRestaurant> favoriteRestaurants = <FavoriteRestaurant>[].obs;
+
   TextEditingController keyword = TextEditingController();
 
   var isLoading = true.obs;
   var connectionStatus = 0.obs;
+  static const String favoriteRestaurantsKey = 'favoriteRestaurants';
 
   late StreamSubscription<InternetConnectionStatus> _listener;
+
+  set restaurantService(RestaurantService service) {
+    _restaurantService = service;
+  }
 
   @override
   void onInit() {
     super.onInit();
-    // _fetchRestaurants();
-    _fetchDataRestaurants();
+    _loadFavoriteRestaurants();
+    fetchDataRestaurants();
     _listener = InternetConnectionChecker().onStatusChange.listen(
       (InternetConnectionStatus status) {
         switch (status) {
@@ -45,13 +56,7 @@ class RestaurantController extends GetxController {
     _listener.cancel();
   }
 
-  // void _fetchRestaurants() async {
-  //   final List<RestaurantModel> fetchedRestaurants =
-  //       await _restaurantService.getRestaurants();
-  //   restaurants.value = fetchedRestaurants;
-  // }
-
-  void _fetchDataRestaurants() async {
+  Future<void> fetchDataRestaurants() async {
     isLoading(true);
 
     try {
@@ -66,6 +71,31 @@ class RestaurantController extends GetxController {
       } else {
         Get.snackbar("title", "$e");
       }
+      if (kDebugMode) {
+        print('Error fetching restaurants: $e');
+      }
+      restaurants.clear();
+      isLoading(false);
+    }
+  }
+
+  void _saveFavoriteRestaurants() async {
+    final prefs = await SharedPreferences.getInstance();
+    final jsonStringList =
+        favoriteRestaurants.map((fav) => json.encode(fav.toJson())).toList();
+
+    prefs.setStringList(favoriteRestaurantsKey, jsonStringList);
+  }
+
+  void _loadFavoriteRestaurants() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedFavorites = prefs.getStringList(favoriteRestaurantsKey);
+
+    if (savedFavorites != null) {
+      favoriteRestaurants.value = savedFavorites
+          .map((jsonString) =>
+              FavoriteRestaurant.fromJson(json.decode(jsonString)))
+          .toList();
     }
   }
 
@@ -101,5 +131,41 @@ class RestaurantController extends GetxController {
         .toList();
 
     restaurants.value = f;
+  }
+
+  bool _isRestaurantSaved(RestaurantsModel restaurant) {
+    return favoriteRestaurants
+        .any((favRestaurant) => favRestaurant.id == restaurant.id);
+  }
+
+  void toggleFavorite(RestaurantsModel restaurant) {
+    final isSaved = _isRestaurantSaved(restaurant);
+
+    if (isSaved) {
+      _removeFromFavorites(restaurant);
+    } else {
+      _addToFavorites(restaurant);
+    }
+
+    favoriteRestaurants.refresh();
+    _saveFavoriteRestaurants();
+  }
+
+  void _addToFavorites(RestaurantsModel restaurant) {
+    final favorite = FavoriteRestaurant(
+      id: restaurant.id,
+      name: restaurant.name,
+      description: restaurant.description,
+      pictureId: restaurant.pictureId,
+      city: restaurant.city,
+      rating: restaurant.rating,
+    );
+
+    favoriteRestaurants.add(favorite);
+  }
+
+  void _removeFromFavorites(RestaurantsModel restaurant) {
+    favoriteRestaurants
+        .removeWhere((favRestaurant) => favRestaurant.id == restaurant.id);
   }
 }
