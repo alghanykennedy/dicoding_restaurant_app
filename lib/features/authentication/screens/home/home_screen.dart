@@ -31,40 +31,51 @@ class HomeScreen extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () async {
-              await showTimePicker(
+              // Show time picker and wait for user input
+              TimeOfDay? pickedTime = await showTimePicker(
                 context: context,
                 initialTime: TimeOfDay.now(),
-              ).then(
-                (pickedTime) {
-                  if (pickedTime != null) {
-                    // Handle the picked time, for example, assign it to a variable
-                    DateTime selectedDateTime = DateTime(
-                      DateTime.now().year,
-                      DateTime.now().month,
-                      DateTime.now().day,
-                      pickedTime.hour,
-                      pickedTime.minute,
-                    );
-
-                    // Check if the selected time is in the future, if not, add a day
-                    if (selectedDateTime.isBefore(DateTime.now())) {
-                      selectedDateTime =
-                          selectedDateTime.add(const Duration(days: 1));
-                    }
-
-                    scheduleTime = selectedDateTime;
-                  } else {
-                    Get.back();
-                    return;
-                  }
-                },
               );
+
+              // Check if the user canceled the time picker
+              if (pickedTime == null) {
+                return;
+              }
+
+              // Handle the picked time, for example, assign it to a variable
+              DateTime selectedDateTime = DateTime(
+                DateTime.now().year,
+                DateTime.now().month,
+                DateTime.now().day,
+                pickedTime.hour,
+                pickedTime.minute,
+              );
+
+              // Check if the selected time is in the future, if not, add a day
+              if (selectedDateTime.isBefore(DateTime.now())) {
+                selectedDateTime =
+                    selectedDateTime.add(const Duration(days: 1));
+              }
+
+              // Update scheduleTime with the selected time
+              scheduleTime = selectedDateTime;
+
+              // Debug print the scheduled time
               debugPrint('Notification Scheduled for $scheduleTime');
-              NotificationServices().scheduleNotification(
-                title: 'Scheduled Notification',
-                body: '$scheduleTime',
-                scheduledNotificationDateTime: scheduleTime,
-              );
+
+              // Schedule the notification only if the selected time is in the future
+              if (selectedDateTime.isAfter(DateTime.now())) {
+                NotificationServices().scheduleNotification(
+                  title: 'Scheduled Notification',
+                  body: '$scheduleTime',
+                  scheduledNotificationDateTime: scheduleTime,
+                );
+                Get.snackbar(
+                  'Notifications Set',
+                  'You will receive a notifications at $scheduleTime',
+                  snackPosition: SnackPosition.BOTTOM,
+                );
+              }
             },
             icon: const Icon(
               Icons.notifications,
