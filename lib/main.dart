@@ -4,9 +4,9 @@ import 'package:timezone/data/latest.dart' as tzdata;
 
 import 'features/authentication/services/notification_services.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  NotificationServices().initNotification();
+  await NotificationServices().initNotification();
   tzdata.initializeTimeZones();
   runApp(const App());
 }

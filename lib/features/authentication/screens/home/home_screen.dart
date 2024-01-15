@@ -1,4 +1,3 @@
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:dicoding_restaurant_app/features/authentication/controller/home/home_controller.dart';
 import 'package:dicoding_restaurant_app/features/authentication/screens/home/detail_screen.dart';
 import 'package:dicoding_restaurant_app/features/authentication/services/notification_services.dart';
@@ -10,6 +9,7 @@ import 'package:get/get.dart';
 
 import '../../../../utils/constants/api_constants.dart';
 import '../../../../utils/constants/image_strings.dart';
+import '../../services/awesome_notification_services.dart';
 import '../noInternet/no_internet_connection.dart';
 
 DateTime scheduleTime = DateTime.now();
@@ -86,29 +86,17 @@ class HomeScreen extends StatelessWidget {
           ),
           IconButton(
             onPressed: () async {
-              final localTimeZone = DateTime.now().timeZoneName;
-
-              await AwesomeNotifications().createNotification(
-                content: NotificationContent(
-                  id: 1,
-                  channelKey: 'scheduled',
-                  title: 'Notification at every single minute',
-                  body:
-                      'This notification was scheduled to repeat at every single minute.',
-                  notificationLayout: NotificationLayout.Default,
-                  // bigPicture: 'asset://assets/images/melted-clock.png',
-                ),
-                schedule: NotificationInterval(
-                  interval: 60,
-                  timeZone: localTimeZone,
-                  repeats: true,
-                ),
+              await AwesomeNotificationService.showNotification(
+                title: "Scheduled Notification",
+                body: "Notification was fired repeat every 1:00 PM",
+                scheduled: true,
+                interval: 24 * 60 * 60,
               );
 
 // Show confirmation
               Get.snackbar(
                 'Daily Reminder Set',
-                'You will receive a daily reminder every 1 minute',
+                'Notification was fired repeat every 1:00 PM',
                 snackPosition: SnackPosition.BOTTOM,
               );
             },
