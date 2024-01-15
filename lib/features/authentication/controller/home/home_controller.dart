@@ -142,7 +142,7 @@ class RestaurantController extends GetxController {
     final isSaved = _isRestaurantSaved(restaurant);
 
     if (isSaved) {
-      _removeFromFavorites(restaurant);
+      removeFromFavorites(restaurant);
     } else {
       _addToFavorites(restaurant);
     }
@@ -164,7 +164,7 @@ class RestaurantController extends GetxController {
     favoriteRestaurants.add(favorite);
   }
 
-  void _removeFromFavorites(RestaurantsModel restaurant) {
+  void removeFromFavorites(RestaurantsModel restaurant) {
     favoriteRestaurants
         .removeWhere((favRestaurant) => favRestaurant.id == restaurant.id);
   }

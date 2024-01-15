@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:dicoding_restaurant_app/features/authentication/controller/home/home_controller.dart';
 import 'package:dicoding_restaurant_app/features/authentication/screens/home/detail_screen.dart';
 import 'package:dicoding_restaurant_app/features/authentication/services/notification_services.dart';
@@ -85,32 +86,29 @@ class HomeScreen extends StatelessWidget {
           ),
           IconButton(
             onPressed: () async {
-              // Set the reminder time to 11:00 PM
-              DateTime dailyReminderTime = DateTime(
-                DateTime.now().year,
-                DateTime.now().month,
-                DateTime.now().day,
-                11,
-                00,
+              final localTimeZone = DateTime.now().timeZoneName;
+
+              await AwesomeNotifications().createNotification(
+                content: NotificationContent(
+                  id: 1,
+                  channelKey: 'scheduled',
+                  title: 'Notification at every single minute',
+                  body:
+                      'This notification was scheduled to repeat at every single minute.',
+                  notificationLayout: NotificationLayout.Default,
+                  // bigPicture: 'asset://assets/images/melted-clock.png',
+                ),
+                schedule: NotificationInterval(
+                  interval: 60,
+                  timeZone: localTimeZone,
+                  repeats: true,
+                ),
               );
 
-              // Check if the selected time is in the future, if not, add a day
-              if (dailyReminderTime.isBefore(DateTime.now())) {
-                dailyReminderTime =
-                    dailyReminderTime.add(const Duration(days: 1));
-              }
-
-              // Schedule daily reminder notification
-              NotificationServices().scheduleNotification(
-                title: 'Daily Reminder',
-                body: 'Check out the latest restaurants!',
-                scheduledNotificationDateTime: dailyReminderTime,
-              );
-
-              // Show confirmation
+// Show confirmation
               Get.snackbar(
                 'Daily Reminder Set',
-                'You will receive a daily reminder at 11:00 PM',
+                'You will receive a daily reminder every 1 minute',
                 snackPosition: SnackPosition.BOTTOM,
               );
             },
