@@ -1,3 +1,4 @@
+import 'package:dicoding_restaurant_app/features/authentication/screens/home/home_screen.dart';
 import 'package:dicoding_restaurant_app/utils/constants/api_constants.dart';
 import 'package:dicoding_restaurant_app/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +6,7 @@ import 'package:get/get.dart';
 
 import '../../../../utils/constants/colors.dart';
 import '../../controller/home/home_controller.dart';
+import '../../services/notification_services.dart';
 import '../noInternet/no_internet_connection.dart';
 
 class DetailScreen extends StatelessWidget {
@@ -30,6 +32,63 @@ class DetailScreen extends StatelessWidget {
             color: DColors.white,
           ),
         ),
+        actions: [
+          IconButton(
+            onPressed: () async {
+              // Show time picker and wait for user input
+              TimeOfDay? pickedTime = await showTimePicker(
+                context: context,
+                initialTime: TimeOfDay.now(),
+              );
+
+              // Check if the user canceled the time picker
+              if (pickedTime == null) {
+                return;
+              }
+
+              // Handle the picked time, for example, assign it to a variable
+              DateTime selectedDateTime = DateTime(
+                DateTime.now().year,
+                DateTime.now().month,
+                DateTime.now().day,
+                pickedTime.hour,
+                pickedTime.minute,
+              );
+
+              // Check if the selected time is in the future, if not, add a day
+              if (selectedDateTime.isBefore(DateTime.now())) {
+                selectedDateTime =
+                    selectedDateTime.add(const Duration(days: 1));
+              }
+
+              // Update scheduleTime with the selected time
+              scheduleTime = selectedDateTime;
+
+              // Debug print the scheduled time
+              debugPrint('Notification Scheduled for $scheduleTime');
+
+              // Schedule the notification only if the selected time is in the future
+              if (selectedDateTime.isAfter(DateTime.now())) {
+                NotificationServices().scheduleNotification(
+                  title: "Introducing a new menu 🍝",
+                  body:
+                      "Don't run out our favorite menus plese check this out!",
+                  scheduledNotificationDateTime: scheduleTime,
+                );
+                Get.snackbar(
+                  'Notifications Set',
+                  'You will receive a notifications at $scheduleTime',
+                  snackPosition: SnackPosition.BOTTOM,
+                );
+              }
+            },
+            icon: const Icon(
+              Icons.notifications,
+              size: 30,
+              color: DColors.white,
+            ),
+          ),
+        ],
         automaticallyImplyLeading: false,
         backgroundColor: DColors.primary,
       ),

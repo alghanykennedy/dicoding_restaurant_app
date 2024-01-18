@@ -19,6 +19,9 @@ class RestaurantController extends GetxController {
   Rx<RestaurantsDetailModel?> detailRestaurants =
       Rx<RestaurantsDetailModel?>(null);
   RxList<FavoriteRestaurant> favoriteRestaurants = <FavoriteRestaurant>[].obs;
+  final RxBool isLoadingSearch = false.obs;
+
+  final FocusNode focusNode = FocusNode();
 
   TextEditingController keyword = TextEditingController();
 
@@ -49,11 +52,27 @@ class RestaurantController extends GetxController {
         }
       },
     );
+    focusNode.addListener(_focusNode);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    focusNode.removeListener(_focusNode);
+    focusNode.dispose();
   }
 
   @override
   void onClose() {
     _listener.cancel();
+  }
+
+  void _focusNode() {
+    if (focusNode.hasFocus == true) {
+      isLoadingSearch.value = true;
+    } else {
+      isLoadingSearch.value = false;
+    }
   }
 
   Future<void> fetchDataRestaurants() async {

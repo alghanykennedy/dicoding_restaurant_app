@@ -1,4 +1,5 @@
 import 'package:dicoding_restaurant_app/features/authentication/controller/onboarding/onboarding_controller.dart';
+import 'package:dicoding_restaurant_app/utils/constants/text_strings.dart';
 import 'package:flutter/material.dart';
 
 class OnBoardingSkip extends StatelessWidget {
@@ -9,7 +10,7 @@ class OnBoardingSkip extends StatelessWidget {
     return TextButton(
       onPressed: () => OnBoardingController.instance.skipPage(),
       child: const Text(
-        'Skip',
+        DTexts.skip,
       ),
     );
   }
